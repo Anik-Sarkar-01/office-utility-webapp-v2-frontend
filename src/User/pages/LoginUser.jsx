@@ -45,7 +45,7 @@ const LoginUser = () => {
   const onSubmit = async (data) => {
     console.log("user data", data)
     try {
-      const response = await axios.post("http://localhost:5000/api/superuser/login", {
+      const response = await axios.post("https://office-utility-webapp-v2-backend.vercel.app/api/superuser/login", {
         email: data.email,
         password: data.password,
       });

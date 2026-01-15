@@ -27,7 +27,7 @@ const LeaveUI = ({ employee, superuser }) => {
                 className="d-flex justify-content-between mt-2"
               >
                 <div className="d-flex gap-4">
-                  <Avatar src={`http://localhost:5000/${emp.image}`} size={30} />
+                  <Avatar src={`https://office-utility-webapp-v2-backend.vercel.app/${emp.image}`} size={30} />
                   <span className="leave-text">{emp.name}</span>
                 </div>
                 <span className="leave-text">
@@ -48,7 +48,7 @@ const LeaveUI = ({ employee, superuser }) => {
       {leaveUsers.map((user, index) => {
         return (
           <div key={index} className="d-flex justify-content-between mt-3">
-            <Avatar src={`http://localhost:5000/${user.image}`} size={25} />
+            <Avatar src={`https://office-utility-webapp-v2-backend.vercel.app/${user.image}`} size={25} />
             <div>{user.name}</div>
             <div>{user.startDate}</div>
             <div>{getIcon("right-arrow")}</div>

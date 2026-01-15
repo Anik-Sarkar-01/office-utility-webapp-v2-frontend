@@ -27,7 +27,7 @@ const Profile = () => {
   useEffect(() => {
     const getSelectedUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/${uid}`);
+        const response = await axios.get(`https://office-utility-webapp-v2-backend.vercel.app/api/users/${uid}`);
         setSelectedUser(response.data.user);
       } catch (error) {
         console.log(error);

@@ -7,7 +7,7 @@ const EmpTable = (props) => {
 
   const loadDetails = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/users/${userId}`);
+      const res = await axios.get(`https://office-utility-webapp-v2-backend.vercel.app/api/users/${userId}`);
       console.log("Employee Details:", res.data);
     } catch (error) {
       console.log("Failed to load employee details:", error);

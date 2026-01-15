@@ -59,7 +59,7 @@ const EditEmployee = (data) => {
     }
 
     try {
-      await axios.patch(`http://localhost:5000/api/users/editEmployee/${user._id}`, formData, {
+      await axios.patch(`https://office-utility-webapp-v2-backend.vercel.app/api/users/editEmployee/${user._id}`, formData, {
         headers: {
           Authorization: "Bearer " + auth.token,
         },

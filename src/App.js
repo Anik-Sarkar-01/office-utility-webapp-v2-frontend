@@ -7,7 +7,6 @@ import { useCallback, useState } from "react";
 import userContext from "./context/userContext";
 import LeavePage from "./Dashboard/components/LeavePage";
 import ApproveLeave from "./Dashboard/components/ApproveLeave";
-import AllLeaves from "./Dashboard/pages/AllLeaves";
 import axios from "axios";
 import Profile from "./UserProfile/pages/Profile";
 import { ConfigProvider } from "antd";
@@ -57,7 +56,7 @@ function App() {
   const getUserData = async () => {
     if (token) {
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/${userId}`);
+        const response = await axios.get(`https://office-utility-webapp-v2-backend.vercel.app/api/users/${userId}`);
         setCurrentUser(response.data.user);
       } catch (error) {
         console.log(error);
@@ -92,11 +91,9 @@ function App() {
             <Route path="/" element={<Dashboard />}></Route>
             <Route path="/login" element={<LoginUser />}></Route>
             <Route path="/signup" element={<NewUser />}></Route>
-            <Route path="/leave-page" element={<AllLeaves />}></Route>
             <Route path="/ask-for-leave/:uid" element={<LeavePage />}></Route>
             <Route path="/edit/:uid" element={<EditEmployee />} />
             <Route path="/profile/:uid" element={<Profile />} />
-            <Route path="/approve-leave" element={<ApproveLeave /> }/>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>

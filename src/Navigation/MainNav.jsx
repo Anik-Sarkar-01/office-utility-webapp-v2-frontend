@@ -10,14 +10,21 @@ import Container from "react-bootstrap/Container";
 import MainHeader from "./MainHeader";
 import getIcon from "../utils/getIcon";
 
-const NavLinks = (item) => {
+// 👉 import logo
+import logo from "../images/logo2.png";
+
+/* -------------------- */
+/* Reusable Nav Link */
+/* -------------------- */
+const NavLinks = ({ link, navIcon, navText }) => {
   return (
     <Nav.Link
-      className="text-decoration-none text-white mt-1 ms-2 me-2"
-      href={item.link}
+      as={Link}
+      to={link}
+      className="d-flex align-items-center gap-1 text-white ms-2 me-2"
     >
-      {getIcon(item.navIcon)}
-      {item.navText}
+      {getIcon(navIcon)}
+      <span>{navText}</span>
     </Nav.Link>
   );
 };
@@ -26,12 +33,14 @@ function MainNav() {
   const authUser = useContext(userContext);
   const navigate = useNavigate();
 
+  /* Redirect if not logged in */
   useEffect(() => {
     if (!authUser.isLoggedIn) {
       navigate("/login");
     }
-  }, [authUser, navigate]);
+  }, [authUser.isLoggedIn, navigate]);
 
+  /* Fetch user on load */
   useEffect(() => {
     authUser.getUserData();
     // eslint-disable-next-line
@@ -39,49 +48,55 @@ function MainNav() {
 
   return (
     <MainHeader>
-      <Navbar expand="lg" bg="dark" data-bs-theme="dark" className="shadow-lg">
+      <Navbar expand="lg" bg="dark" variant="dark" className="shadow-lg">
         <Container>
-          <Navbar.Brand>
-            <Link
-              to={`${authUser.isLoggedIn ? "/" : "/login"}`}
-              className="text-decoration-none fw-bold text-white"
-            >
-              Employee Management System
-            </Link>
+          {/* Logo + Brand */}
+          <Navbar.Brand as={Link} to={authUser.isLoggedIn ? "/" : "/login"}>
+            <div className="d-flex align-items-center gap-2">
+              <img
+                src={logo}
+                alt="DEMS Logo"
+                height="32"
+                className="d-inline-block align-top"
+              />
+              <span className="fw-bold text-white">DEMS</span>
+            </div>
           </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
+
+          <Navbar.Toggle aria-controls="main-navbar-nav" />
+
+          <Navbar.Collapse id="main-navbar-nav">
+            {/* Left Links */}
             <Nav className="me-auto">
               {authUser.isLoggedIn && (
                 <>
                   <NavLinks
-                    link="/leave-page"
+                    link={`/ask-for-leave/${authUser.userId}`}
                     navIcon="leave"
-                    navText="Leave Stats"
+                    navText="Apply Leave"
                   />
                   <NavLinks
                     link={`/profile/${authUser.userId}`}
                     navIcon="profile"
                     navText="Profile"
                   />
-                  <NavLinks
-                    link="/"
-                    navIcon="dashboard"
-                    navText="Dashboard"
-                  />
                 </>
               )}
             </Nav>
+
+            {/* Right Dropdown */}
             {authUser.token && authUser.currentUser && (
-              <NavDropdown
-                title={authUser.currentUser.name}
-                className="text-white"
-                id="collapsible-nav-dropdown"
-              >
-                <NavDropdown.Item onClick={authUser.logout}>
-                  Log Out
-                </NavDropdown.Item>
-              </NavDropdown>
+              <Nav>
+                <NavDropdown
+                  align="end"
+                  title={authUser.currentUser.name}
+                  id="user-nav-dropdown"
+                >
+                  <NavDropdown.Item onClick={authUser.logout}>
+                    Log Out
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
             )}
           </Navbar.Collapse>
         </Container>

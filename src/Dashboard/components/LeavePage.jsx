@@ -39,7 +39,7 @@ export default function LeavePage() {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/${auth.userId}`);
+        const response = await axios.get(`https://office-utility-webapp-v2-backend.vercel.app/api/users/${auth.userId}`);
         const user = response.data.user;
         setUserData(user);
 

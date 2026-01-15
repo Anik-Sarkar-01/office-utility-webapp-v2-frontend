@@ -3,11 +3,9 @@ import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-// import EmpList from "../../User/components/EmpList";
 import EmpTable from "../components/EmpTable";
 import userContext from "../../context/userContext";
 import CardUI from "../../UI/CardUI";
-import LeaveUI from "../../UI/LeaveUI";
 import WelcomeUI from "../../UI/WelcomeUI";
 
 import { Spin } from "antd";
@@ -19,60 +17,54 @@ const Dashboard = () => {
   useEffect(() => {
     const getEmployeeDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/`);
+        const response = await axios.get("https://office-utility-webapp-v2-backend.vercel.app/api/users/");
         setEmployee(response.data.user);
       } catch (error) {
         console.log("error is:", error);
       }
     };
+
     getEmployeeDetails();
     authUser.getUserData();
     // eslint-disable-next-line
   }, []);
 
-  return (
-    <>
-      {employee && authUser.currentUser ? (
-        <div className="container-fluid mt-3">
-          <div className="row">
-            <div className="col-lg-8 col-md-12">
-              <CardUI width="w-100">
-                <WelcomeUI employee={authUser.currentUser} />
-              </CardUI>
-            </div>
-            {/* <div className="col-lg-4 col-md-12">
-              <CardUI>
-                <LeaveUI employee={employee} superuser={authUser.isSuperUser} />
-              </CardUI>
-            </div> */}
-          </div>
+  if (!employee || !authUser.currentUser) {
+    return <Spin fullscreen />;
+  }
 
-          <div className="container-fluid">
-            <div className="d-flex me-4 mb-3">
-              {authUser.isSuperUser && (
-                <Link to={"/signup"}>
-                  <Button varient="" className="custom-button bg-white mt-3">
-                    + Add a New Employee
-                  </Button>
-                </Link>
-              )}
+  return (
+    <div className="container-fluid mt-3">
+      <div className="row justify-content-center">
+        {/* MAIN COLUMN — SAME WIDTH FOR EVERYTHING */}
+        <div className="col-lg-8 col-md-12 d-flex flex-column gap-4">
+
+          {/* Welcome Section */}
+          <CardUI width="w-100">
+            <WelcomeUI employee={authUser.currentUser} />
+          </CardUI>
+
+          {/* Add Employee Button */}
+          {authUser.isSuperUser && (
+            <div className="d-flex justify-content-end">
+              <Link to="/signup">
+                <Button className="custom-button bg-white">
+                  + Add a New Employee
+                </Button>
+              </Link>
             </div>
-            <div className="row">
-              <div className="col-lg-8 col-md-12">
-                {authUser.isSuperUser && (
-                  <EmpTable employee={employee} />
-                )}
-              </div>
-              {/* <div className="col-lg-8 col-md-7">
-                <EmpList employee={employee} />
-              </div> */}
-            </div>
-          </div>
+          )}
+
+          {/* Employee Table */}
+          {authUser.isSuperUser && (
+            <CardUI width="w-100">
+              <EmpTable employee={employee} />
+            </CardUI>
+          )}
+
         </div>
-      ) : (
-        <Spin fullscreen></Spin>
-      )}
-    </>
+      </div>
+    </div>
   );
 };
 

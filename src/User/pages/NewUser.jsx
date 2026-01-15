@@ -65,7 +65,7 @@ const NewUser = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/api/superuser/signup",
+        "https://office-utility-webapp-v2-backend.vercel.app/api/superuser/signup",
         formData,
         {
           headers: {

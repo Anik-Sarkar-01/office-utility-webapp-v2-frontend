@@ -14,7 +14,7 @@ const CardUI = (props) => {
           >
             <Avatar
               size={props?.imgSize || 64}
-              src={`http://localhost:5000/${props.image}`}
+              src={`https://office-utility-webapp-v2-backend.vercel.app/${props.image}`}
               className="my-2"
             />
             {props.title && (
