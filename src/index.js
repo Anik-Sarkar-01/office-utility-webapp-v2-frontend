@@ -7,7 +7,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.baseURL = "https://office-utility-webapp-v2-backend.vercel.app" || "http://localhost:3000";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
