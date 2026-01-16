@@ -12,7 +12,7 @@ const departmentData = {
     positions: ["Managing Director", "Director"],
     employees: {
       "Managing Director": ["Muhammad Sayeed"],
-      Director: ["Abhijit Chowdhury"],
+      "Director": ["Abhijit Chowdhury"],
     },
   },
 
