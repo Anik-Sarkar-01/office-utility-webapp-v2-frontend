@@ -343,11 +343,11 @@ const NewUser = () => {
   const watchedName = watch("name");
   const selectedDepartment = watch("department");
   const selectedPosition = watch("position");
-  const customDepartment = watch("customDepartment");
-  const customPosition = watch("customPosition");
+  // const customDepartment = watch("customDepartment");
+  // const customPosition = watch("customPosition");
   const personInCharge = watch("personInCharge");
   const reportingTo = watch("reportingTo");
-  const personInChargePosition = watch("personInChargePosition");
+  // const personInChargePosition = watch("personInChargePosition");
   const reportingToPosition = watch("reportingToPosition");
 
   /* -------------------- Reset Logic -------------------- */
@@ -521,6 +521,7 @@ const NewUser = () => {
 
       const res = await axios.post(
         "https://office-utility-webapp-v2-backend.vercel.app/api/superuser/signup",
+        // "http://localhost:5000/api/superuser/signup",
         payload,
         {
           headers: {
