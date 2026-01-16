@@ -229,6 +229,7 @@ const FormGroup = ({
 
           {type === "select" ? (
             <Form.Select
+              defaultValue=""
               {...register(id, {
                 required: required && "This field is required",
               })}
@@ -252,7 +253,6 @@ const FormGroup = ({
             <Form.Control
               type={type}
               placeholder={placeholder}
-              value={value}
               readOnly={readOnly}
               disabled={disabled}
               {...register(id, {
@@ -272,7 +272,7 @@ const FormGroup = ({
 
 /* -------------------- Main Component -------------------- */
 const NewUser = () => {
-  const authUser = useContext(userContext);
+  const authUser = useContext(userContext) || {};
   const [allEmployees, setAllEmployees] = useState([]);
   const [employeesByDepartment, setEmployeesByDepartment] = useState({});
 
@@ -523,8 +523,11 @@ const NewUser = () => {
         payload,
         {
           headers: {
-            Authorization: "Bearer " + authUser.token,
+            Authorization: authUser?.token
+              ? "Bearer " + authUser.token
+              : "",
           },
+
         }
       );
 
