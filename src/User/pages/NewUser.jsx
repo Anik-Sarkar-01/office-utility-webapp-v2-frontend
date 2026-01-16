@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { message } from "antd";
@@ -311,7 +311,7 @@ const NewUser = () => {
     setEmployeesByDepartment(deptEmployees);
   }, []);
 
-  const generateEmailFromName = (name) => {
+  const generateEmailFromName = useMemo(() => (name) => {
     if (!name) return "";
 
     // Words to ignore
@@ -329,13 +329,14 @@ const NewUser = () => {
     const lastName = parts[parts.length - 1];
 
     return `${firstName}.${lastName}@duronto.tv`;
-  };
+  }, []);
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    resetField,
     formState: { errors },
   } = useForm();
 
@@ -343,12 +344,8 @@ const NewUser = () => {
   const watchedName = watch("name");
   const selectedDepartment = watch("department");
   const selectedPosition = watch("position");
-  // const customDepartment = watch("customDepartment");
-  // const customPosition = watch("customPosition");
   const personInCharge = watch("personInCharge");
   const reportingTo = watch("reportingTo");
-  // const personInChargePosition = watch("personInChargePosition");
-  const reportingToPosition = watch("reportingToPosition");
 
   /* -------------------- Reset Logic -------------------- */
   useEffect(() => {
@@ -359,50 +356,52 @@ const NewUser = () => {
         shouldDirty: true,
       });
     }
-  }, [watchedName, setValue]);
+  }, [watchedName, generateEmailFromName, setValue]);
 
-  // Reset position when department changes
+  // Reset fields when department changes
   useEffect(() => {
     if (selectedDepartment && selectedDepartment !== "Other (Type manually)") {
-      setValue("position", "");
-      setValue("customPosition", "");
+      resetField("position");
+      resetField("customPosition");
+      resetField("personInCharge");
+      resetField("reportingTo");
+      resetField("personInChargePosition");
+      resetField("reportingToPosition");
+      resetField("customPersonInCharge");
+      resetField("customReportingTo");
+      resetField("customPersonInChargePosition");
+      resetField("customReportingToPosition");
     }
-  }, [selectedDepartment, setValue]);
+  }, [selectedDepartment, resetField]);
 
-  // Reset person dropdowns when department changes
-  useEffect(() => {
-    if (selectedDepartment && selectedDepartment !== "Other (Type manually)") {
-      setValue("personInCharge", "");
-      setValue("reportingTo", "");
-      setValue("personInChargePosition", "");
-      setValue("reportingToPosition", "");
-      setValue("customPersonInCharge", "");
-      setValue("customReportingTo", "");
-      setValue("customPersonInChargePosition", "");
-      setValue("customReportingToPosition", "");
-    }
-  }, [selectedDepartment, setValue]);
-
-  // Reset custom fields when dropdowns change
+  // Reset custom department field
   useEffect(() => {
     if (selectedDepartment !== "Other (Type manually)") {
-      setValue("customDepartment", "");
+      resetField("customDepartment");
     }
+  }, [selectedDepartment, resetField]);
 
+  // Reset custom position field
+  useEffect(() => {
     if (selectedPosition !== "Other (Type manually)") {
-      setValue("customPosition", "");
+      resetField("customPosition");
     }
+  }, [selectedPosition, resetField]);
 
+  // Reset custom person fields
+  useEffect(() => {
     if (personInCharge !== "Other (Type manually)") {
-      setValue("customPersonInCharge", "");
-      setValue("customPersonInChargePosition", "");
+      resetField("customPersonInCharge");
+      resetField("customPersonInChargePosition");
     }
+  }, [personInCharge, resetField]);
 
+  useEffect(() => {
     if (reportingTo !== "Other (Type manually)") {
-      setValue("customReportingTo", "");
-      setValue("customReportingToPosition", "");
+      resetField("customReportingTo");
+      resetField("customReportingToPosition");
     }
-  }, [selectedDepartment, selectedPosition, personInCharge, reportingTo, setValue]);
+  }, [reportingTo, resetField]);
 
   // Update position fields when person is selected
   useEffect(() => {
@@ -431,13 +430,13 @@ const NewUser = () => {
 
   /* -------------------- Options -------------------- */
   // Department options from departmentData + "Other"
-  const departmentOptions = [
+  const departmentOptions = useMemo(() => [
     ...Object.keys(departmentData),
     "Other (Type manually)",
-  ];
+  ], []);
 
   // Position options based on selected department
-  const positionOptions = React.useMemo(() => {
+  const positionOptions = useMemo(() => {
     if (!selectedDepartment || selectedDepartment === "Other (Type manually)") {
       return ["Other (Type manually)"];
     }
@@ -453,7 +452,7 @@ const NewUser = () => {
   }, [selectedDepartment]);
 
   // Person In-Charge options (filtered by department)
-  const personInChargeOptions = React.useMemo(() => {
+  const personInChargeOptions = useMemo(() => {
     if (!selectedDepartment || selectedDepartment === "Other (Type manually)") {
       return ["Other (Type manually)"];
     }
@@ -467,7 +466,7 @@ const NewUser = () => {
   }, [selectedDepartment, employeesByDepartment]);
 
   // Reporting To options (filtered by department)
-  const reportingToOptions = React.useMemo(() => {
+  const reportingToOptions = useMemo(() => {
     if (!selectedDepartment || selectedDepartment === "Other (Type manually)") {
       return ["Other (Type manually)"];
     }
@@ -521,7 +520,6 @@ const NewUser = () => {
 
       const res = await axios.post(
         "https://office-utility-webapp-v2-backend.vercel.app/api/superuser/signup",
-        // "http://localhost:5000/api/superuser/signup",
         payload,
         {
           headers: {
@@ -577,7 +575,7 @@ const NewUser = () => {
                 options={departmentOptions}
               />
 
-              {selectedDepartment === "Other (Type manually)" && (
+              {watch("department") === "Other (Type manually)" && (
                 <FormGroup
                   register={register}
                   errors={errors.customDepartment}
@@ -588,7 +586,7 @@ const NewUser = () => {
                 />
               )}
 
-              {selectedPosition === "Other (Type manually)" && (
+              {watch("position") === "Other (Type manually)" && (
                 <FormGroup
                   register={register}
                   errors={errors.customPosition}
@@ -737,7 +735,7 @@ const NewUser = () => {
                     required
                   />
                 </>
-              ) : reportingToPosition && (
+              ) : watch("reportingToPosition") && (
                 <>
                   <FormGroup
                     register={register}
